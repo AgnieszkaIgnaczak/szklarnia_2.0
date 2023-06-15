@@ -30,15 +30,6 @@ public class Greenhouse {
     private String harvestType; //manualnie (manually), sprzęt (equipment) lub roboty (robots)
     private String farmingTechnique; //w ziemi (ground farming), na poletkach (plot farming), hydroponika (hydroponic farming)
 
-//    public Greenhouse(Integer greenhouseId, Float area, String buildingMaterial, Float rentPrice, String harvestType, String farmingTechnique) {
-//        this.greenhouseId = greenhouseId;
-//        this.area = area;
-//        this.buildingMaterial = buildingMaterial;
-//        this.rentPrice = rentPrice;
-//        this.harvestType = harvestType;
-//        this.farmingTechnique = farmingTechnique;
-//    }
-
     public Greenhouse() {
 
     }

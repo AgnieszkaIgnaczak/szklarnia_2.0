@@ -6,8 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -29,7 +27,7 @@ public class GreenhouseController {
     }
 
     //delete by ID
-    @DeleteMapping("/{greenhouseId}")
+    @DeleteMapping("/{greenhouseId}") //{} musi być to, co w 31 linii
     public ResponseEntity<Void> deleteGreenhouseById(@PathVariable int greenhouseId) {
         if(greenhouseService.getGreenhouseById(greenhouseId).isEmpty()) {
             return ResponseEntity.notFound().build();

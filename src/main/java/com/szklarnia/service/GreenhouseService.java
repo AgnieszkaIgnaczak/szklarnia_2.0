@@ -4,10 +4,7 @@ import com.szklarnia.model.Greenhouse;
 import com.szklarnia.repository.GreenhouseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.ReflectionUtils;
 
-import java.lang.reflect.Field;
-import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -16,17 +13,17 @@ public class GreenhouseService {
     @Autowired
     private GreenhouseRepository greenhouseRepository;
 
-    //get All entries
+    //get all greenhouses
     public Iterable<Greenhouse> getAllGreenhouses() {
         return greenhouseRepository.findAll();
     }
 
-    //delete by ID
+    //delete greenhouse by ID
     public void deleteGreenhouseById(int greenhouseId) {
         greenhouseRepository.deleteById(greenhouseId);
     }
 
-    //get entry by ID
+    //get greenhouse by ID
     public Optional<Greenhouse> getGreenhouseById(int greenhouseId) {
         return greenhouseRepository.findById(greenhouseId);
     }

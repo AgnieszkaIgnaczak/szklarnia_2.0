@@ -1,20 +1,24 @@
 package com.szklarnia.model;
 
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+
+@Entity
+@Table
 public class Gardener {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer gardenerId;
+
+    @NotNull(message = "name cannot be null")
     private String name;
     private Float experience;
     private String address;
+
+    @NotNull(message = "name cannot be null")
     private Float salary;
 
-    public Gardener(Integer gardenerId, String name, Float experience, String address, Float salary) {
-        this.gardenerId = gardenerId;
-        this.name = name;
-        this.experience = experience;
-        this.address = address;
-        this.salary = salary;
-    }
 
     public Gardener() {
 
