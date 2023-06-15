@@ -1,20 +1,23 @@
 package com.szklarnia.model;
 
+
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+
+@Entity
+@Table
 public class GrowerCompany {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer companyId;
+
+    @NotNull(message = "name cannot be null")
     private String name;
     private String address;
     private String phoneNumber;
     private String EMail;
 
-    public GrowerCompany(Integer companyId, String name, String address, String phoneNumber, String EMail) {
-        this.companyId = companyId;
-        this.name = name;
-        this.address = address;
-        this.phoneNumber = phoneNumber;
-        this.EMail = EMail;
-    }
 
     public GrowerCompany() {
 
