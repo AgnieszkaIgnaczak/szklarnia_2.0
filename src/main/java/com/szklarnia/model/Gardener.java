@@ -9,7 +9,15 @@ public class Gardener {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    //parent
+    @Column(name = "gardener_id") //primary key dla ogrodnika
     private Integer gardenerId;
+
+    //każdy ogrodnik ma tylko 1 szklarnię
+    //stworzy z automatu kolumnę z foreign key w tabeli Gardener: greenhouse_greenhouse_id (greenhouse_id to primary key z encji Greenhouse)
+    @OneToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH}) //ALL zawiera wszystkie, oprócz remove, bo remove jeśli usunę szklarnię to us
+    @JoinColumn(name = "fk_greenhouse_id") //w momencie, gdy chcemy nadać nazwę kolumnie z foreign key
+    private Greenhouse greenhouse; //pole typu Greenhouse, żeby połączył encje
 
     @NotNull(message = "name cannot be null")
     private String name;
@@ -62,5 +70,13 @@ public class Gardener {
 
     public void setSalary(Float salary) {
         this.salary = salary;
+    }
+
+    public Greenhouse getGreenhouse() {
+        return greenhouse;
+    }
+
+    public void setGreenhouse(Greenhouse greenhouse) {
+        this.greenhouse = greenhouse;
     }
 }

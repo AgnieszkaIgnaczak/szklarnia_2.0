@@ -65,4 +65,16 @@ public class GardenerController {
         }
     }
 
+    //id gardener i greenhouse, PATCH i zwraca np ok
+    //Patch, przyjmuje id szklarni i ogrodnika // endpoint URL 2 id /gardenerid/szkalrnia
+    @PatchMapping("/greenhouseForGardener/{gardenerId}/setGreenhouse/{greenhouseId}")
+    public ResponseEntity<String> setGreenhouseForGardener(@PathVariable Integer gardenerId, @PathVariable Integer greenhouseId) { //zmienna ze ścieżki, linijka 70
+        Optional<Gardener> gardenerInGreenhouse = gardenerService.setGreenhouseForGardener(greenhouseId, gardenerId);
+        if(gardenerInGreenhouse.isPresent()) {
+            return ResponseEntity.ok("Greenhouse set for Gardener successfully");
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
 }

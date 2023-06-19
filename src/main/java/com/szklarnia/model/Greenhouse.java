@@ -1,12 +1,11 @@
 package com.szklarnia.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-
-import java.math.BigDecimal;
 
 
 @Entity
@@ -15,7 +14,14 @@ public class Greenhouse {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    //child
+    @Column(name = "greenhouse_id") //primary key dla szklarni
     private Integer greenhouseId;
+
+    //mappedBy parameter - bidirectional association between Gardener and Greenhouse
+    @OneToOne(mappedBy = "greenhouse")
+    @JsonIgnore
+    private Gardener gardener;
 
     @NotNull(message = "area cannot be null")
 //    @Size(min = 10, max = 300, message = "area must be in range from 10 to 300 sqr m"), TO NIE WARTOŚĆ, TYLKO ZLICZA ELEMENTY
@@ -29,6 +35,7 @@ public class Greenhouse {
     private Float rentPrice;
     private String harvestType; //manualnie (manually), sprzęt (equipment) lub roboty (robots)
     private String farmingTechnique; //w ziemi (ground farming), na poletkach (plot farming), hydroponika (hydroponic farming)
+
 
     public Greenhouse() {
 
@@ -80,5 +87,13 @@ public class Greenhouse {
 
     public void setFarmingTechnique(String farmingTechnique) {
         this.farmingTechnique = farmingTechnique;
+    }
+
+    public Gardener getGardener() {
+        return gardener;
+    }
+
+    public void setGardener(Gardener gardener) {
+        this.gardener = gardener;
     }
 }

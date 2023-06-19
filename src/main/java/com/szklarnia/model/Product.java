@@ -1,20 +1,28 @@
 package com.szklarnia.model;
 
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+
+@Entity
+@Table
 public class Product {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer productId;
+
+    @NotNull
     private String fruit;
+
+    @NotNull
     private String vegetable;
+
+    @NotNull
     private String flower;
+
+    @NotNull
     private String seedling;
 
-    public Product(Integer productId, String fruit, String vegetable, String flower, String seedling) {
-        this.productId = productId;
-        this.fruit = fruit;
-        this.vegetable = vegetable;
-        this.flower = flower;
-        this.seedling = seedling;
-    }
 
     public Product() {
 
