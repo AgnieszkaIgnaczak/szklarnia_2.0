@@ -15,7 +15,7 @@ public class Gardener {
 
     //każdy ogrodnik ma tylko 1 szklarnię
     //stworzy z automatu kolumnę z foreign key w tabeli Gardener: greenhouse_greenhouse_id (greenhouse_id to primary key z encji Greenhouse)
-    @OneToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH}) //ALL zawiera wszystkie, oprócz remove, bo remove jeśli usunę szklarnię to us
+    @OneToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH}) //ALL zawiera wszystkie, oprócz REMOVE, bo REMOVE jeśli usunę szklarnię to usunie wszystko
     @JoinColumn(name = "fk_greenhouse_id") //w momencie, gdy chcemy nadać nazwę kolumnie z foreign key
     private Greenhouse greenhouse; //pole typu Greenhouse, żeby połączył encje
 

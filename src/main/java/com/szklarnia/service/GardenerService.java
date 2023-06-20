@@ -7,6 +7,7 @@ import com.szklarnia.repository.GreenhouseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -48,6 +49,11 @@ public class GardenerService {
             return Optional.of(gardenerRepository.save(updateGardener));
         }
         return Optional.empty();
+    }
+
+    //znajdź ogrodników po imieniu
+    public List<Gardener> findAllGardenersByName(String name) {
+        return gardenerRepository.findAllByNameContaining(name);
     }
 
 

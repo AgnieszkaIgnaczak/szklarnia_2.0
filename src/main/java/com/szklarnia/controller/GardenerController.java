@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -65,8 +66,13 @@ public class GardenerController {
         }
     }
 
-    //id gardener i greenhouse, PATCH i zwraca np ok
-    //Patch, przyjmuje id szklarni i ogrodnika // endpoint URL 2 id /gardenerid/szkalrnia
+    @GetMapping("/getGardenersByName/{name}")
+    public List<Gardener> FindAllGardenersByName(@PathVariable String name) {
+        return gardenerService.findAllGardenersByName(name);
+    }
+
+    //Patch przyjmuje id szklarni i id ogrodnika
+    //2 endpointy
     @PatchMapping("/greenhouseForGardener/{gardenerId}/setGreenhouse/{greenhouseId}")
     public ResponseEntity<String> setGreenhouseForGardener(@PathVariable Integer gardenerId, @PathVariable Integer greenhouseId) { //zmienna ze ścieżki, linijka 70
         Optional<Gardener> gardenerInGreenhouse = gardenerService.setGreenhouseForGardener(greenhouseId, gardenerId);

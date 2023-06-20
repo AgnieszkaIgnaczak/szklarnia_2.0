@@ -1,6 +1,8 @@
 package com.szklarnia.service;
 
+import com.szklarnia.model.Gardener;
 import com.szklarnia.model.Greenhouse;
+import com.szklarnia.repository.GardenerRepository;
 import com.szklarnia.repository.GreenhouseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,13 +15,23 @@ public class GreenhouseService {
     @Autowired
     private GreenhouseRepository greenhouseRepository;
 
+    @Autowired
+    private GardenerRepository gardenerRepository;
+
     //get all greenhouses
     public Iterable<Greenhouse> getAllGreenhouses() {
         return greenhouseRepository.findAll();
     }
 
-    //delete greenhouse by ID
+    //delete greenhouse by ID => public void deleteGreenhouseById(int greenhouseId) {greenhouseRepository.deleteById(greenhouseId);}
+    //odpięcie gardener
     public void deleteGreenhouseById(int greenhouseId) {
+        Optional<Greenhouse> greenhouseToDelete = greenhouseRepository.findById(greenhouseId);
+        if(greenhouseToDelete.isPresent()) {
+            Gardener gardener = greenhouseToDelete.get().getGardener();
+            gardener.setGreenhouse(null); //utrata połączenia
+            gardenerRepository.save(gardener);
+        }
         greenhouseRepository.deleteById(greenhouseId);
     }
 
