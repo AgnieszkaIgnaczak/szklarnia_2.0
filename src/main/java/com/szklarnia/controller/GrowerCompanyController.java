@@ -1,5 +1,6 @@
 package com.szklarnia.controller;
 
+import com.szklarnia.model.Greenhouse;
 import com.szklarnia.model.GrowerCompany;
 import com.szklarnia.service.GrowerCompanyService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,5 +66,7 @@ public class GrowerCompanyController {
             return ResponseEntity.notFound().build();
         }
     }
+
+
 
 }

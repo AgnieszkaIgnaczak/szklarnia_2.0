@@ -70,6 +70,16 @@ public class GreenhouseController {
         }
     }
 
+    //OneToMany
+    @PatchMapping("/{greenhouseId}/setGrowerCompany/{growerCompanyId}")
+    public ResponseEntity<String> setGreenhousesForGrowerCompany(@PathVariable Integer growerCompanyId, @PathVariable Integer greenhouseId) {
+        Optional<Greenhouse> greenhousesForGrowerCompany = greenhouseService.setGreenhousesForGrowerCompany(growerCompanyId, greenhouseId);
+        if(greenhousesForGrowerCompany.isPresent()) {
+            return ResponseEntity.ok("Greenhouses set for Grower Company successfully");
+        }
+        return ResponseEntity.notFound().build();
+    }
+
 //    @PatchMapping("/partialUpdate/{greenhouseId}")
 //    public Greenhouse partialGreenhouseEntityUpdate(@PathVariable Integer greenhouseId, @RequestBody Map<String, Object> greenhouseFields) { //drugi argument to tylko to, co chcemy zupdatować
 //        return greenhouseService.partialGreenhouseEntityUpdate(greenhouseId, greenhouseFields);

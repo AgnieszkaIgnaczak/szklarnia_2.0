@@ -7,6 +7,8 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
+import java.util.List;
+
 
 @Entity
 @Table
@@ -19,9 +21,13 @@ public class Greenhouse {
     private Integer greenhouseId;
 
     //mappedBy parameter - bidirectional association between Gardener and Greenhouse
-    @OneToOne(mappedBy = "greenhouse")
+    @OneToOne(mappedBy = "greenhouse") //pole w encji Gardener
     @JsonIgnore
     private Gardener gardener;
+
+    @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH}) //parent do company, definiuje relację, company zależy od greenhouse
+    @JoinColumn(name = "fk_growerCompany_id")
+    private GrowerCompany growerCompany;
 
     @NotNull(message = "area cannot be null")
 //    @Size(min = 10, max = 300, message = "area must be in range from 10 to 300 sqr m"), TO NIE WARTOŚĆ, TYLKO ZLICZA ELEMENTY
@@ -95,5 +101,13 @@ public class Greenhouse {
 
     public void setGardener(Gardener gardener) {
         this.gardener = gardener;
+    }
+
+    public GrowerCompany getGrowerCompany() {
+        return growerCompany;
+    }
+
+    public void setGrowerCompany(GrowerCompany growerCompany) {
+        this.growerCompany = growerCompany;
     }
 }

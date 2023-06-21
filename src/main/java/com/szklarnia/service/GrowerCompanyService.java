@@ -1,7 +1,9 @@
 package com.szklarnia.service;
 
 import com.szklarnia.model.Gardener;
+import com.szklarnia.model.Greenhouse;
 import com.szklarnia.model.GrowerCompany;
+import com.szklarnia.repository.GreenhouseRepository;
 import com.szklarnia.repository.GrowerCompanyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,6 +15,9 @@ public class GrowerCompanyService {
 
     @Autowired
     private GrowerCompanyRepository growerCompanyRepository;
+
+    @Autowired
+    private GreenhouseRepository greenhouseRepository;
 
     public Iterable<GrowerCompany> getAllGrowerCompanies() {
         return growerCompanyRepository.findAll();
@@ -40,4 +45,5 @@ public class GrowerCompanyService {
         }
         return Optional.empty();
     }
+
 }

@@ -2,8 +2,10 @@ package com.szklarnia.service;
 
 import com.szklarnia.model.Gardener;
 import com.szklarnia.model.Greenhouse;
+import com.szklarnia.model.GrowerCompany;
 import com.szklarnia.repository.GardenerRepository;
 import com.szklarnia.repository.GreenhouseRepository;
+import com.szklarnia.repository.GrowerCompanyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +16,9 @@ public class GreenhouseService {
 
     @Autowired
     private GreenhouseRepository greenhouseRepository;
+
+    @Autowired
+    private GrowerCompanyRepository growerCompanyRepository;
 
     @Autowired
     private GardenerRepository gardenerRepository;
@@ -56,6 +61,16 @@ public class GreenhouseService {
             return Optional.of(greenhouseRepository.save(updateGreenhouse)); //save z CrudRepository
         }
         return Optional.empty(); //by nie zwracał nulla
+    }
+
+    public Optional<Greenhouse> setGreenhousesForGrowerCompany(Integer greenhouseId, Integer growerCompanyId) {
+        if(greenhouseRepository.existsById(greenhouseId) && growerCompanyRepository.existsById(growerCompanyId)) {
+            Greenhouse greenhouse = greenhouseRepository.findById(greenhouseId).get();
+            GrowerCompany growerCompany = growerCompanyRepository.findById(growerCompanyId).get();
+            greenhouse.setGrowerCompany(growerCompany);
+            return Optional.of(greenhouseRepository.save(greenhouse));
+        }
+        return Optional.empty();
     }
 
 //    public Greenhouse partialGreenhouseEntityUpdate(Integer greenhouseId, Map<String, Object> greenhouseFields) {
