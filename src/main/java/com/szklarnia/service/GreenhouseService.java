@@ -34,10 +34,12 @@ public class GreenhouseService {
         Optional<Greenhouse> greenhouseToDelete = greenhouseRepository.findById(greenhouseId);
         if(greenhouseToDelete.isPresent()) {
             Gardener gardener = greenhouseToDelete.get().getGardener();
-            gardener.setGreenhouse(null); //utrata połączenia
-            gardenerRepository.save(gardener);
+            if(gardener != null) {
+                gardener.setGreenhouse(null); //utrata powiązania
+                gardenerRepository.save(gardener);
+            }
+            greenhouseRepository.deleteById(greenhouseId);
         }
-        greenhouseRepository.deleteById(greenhouseId);
     }
 
     //get greenhouse by ID

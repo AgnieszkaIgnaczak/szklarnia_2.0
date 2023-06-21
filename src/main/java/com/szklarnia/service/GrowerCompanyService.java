@@ -8,6 +8,7 @@ import com.szklarnia.repository.GrowerCompanyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -23,8 +24,16 @@ public class GrowerCompanyService {
         return growerCompanyRepository.findAll();
     }
 
-    public void deleteGrowerCompanyById(int growerCompanyId) {
-        growerCompanyRepository.deleteById(growerCompanyId);
+    public void deleteGrowerCompanyById(int growerCompanyId) { // => { growerCompanyRepository.deleteById(growerCompanyId) };
+
+        Optional<GrowerCompany> growerCompanyToDelete = growerCompanyRepository.findById(growerCompanyId);
+        if(growerCompanyToDelete.isPresent()) {
+            for (Greenhouse greenhouse : growerCompanyToDelete.get().getGreenhouses()) {
+                greenhouse.setGrowerCompany(null);
+                greenhouseRepository.save(greenhouse);
+            }
+            growerCompanyRepository.deleteById(growerCompanyId);
+        }
     }
 
     public Optional<GrowerCompany> getGrowerCompanyById(int growerCompanyId) {

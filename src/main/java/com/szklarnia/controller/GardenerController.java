@@ -74,7 +74,7 @@ public class GardenerController {
     //Patch przyjmuje id szklarni i id ogrodnika
     //2 endpointy
     //OneToOne
-    @PatchMapping("/greenhouseForGardener/{gardenerId}/setGreenhouse/{greenhouseId}")
+    @PatchMapping("/{gardenerId}/setGreenhouse/{greenhouseId}")
     public ResponseEntity<String> setGreenhouseForGardener(@PathVariable Integer gardenerId, @PathVariable Integer greenhouseId) { //zmienna ze ścieżki, linijka 70
         Optional<Gardener> gardenerInGreenhouse = gardenerService.setGreenhouseForGardener(greenhouseId, gardenerId);
         if(gardenerInGreenhouse.isPresent()) {
