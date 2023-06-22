@@ -1,7 +1,10 @@
 package com.szklarnia.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+
+import java.util.Set;
 
 @Entity
 @Table
@@ -11,18 +14,19 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer productId;
 
-    @NotNull
+
+    @ManyToMany(cascade = CascadeType.MERGE)
+    @JsonIgnore
+    @JoinTable(name = "grower_company_product", joinColumns = @JoinColumn(name = "product_id"), inverseJoinColumns = @JoinColumn(name = "company_id"))
+    private Set<GrowerCompany> growerCompanies;
+
     private String fruit;
 
-    @NotNull
     private String vegetable;
 
-    @NotNull
     private String flower;
 
-    @NotNull
     private String seedling;
-
 
     public Product() {
 
@@ -67,4 +71,17 @@ public class Product {
     public void setSeedling(String seedling) {
         this.seedling = seedling;
     }
+
+    public Set<GrowerCompany> getGrowerCompanies() {
+        return growerCompanies;
+    }
+
+    public void setGrowerCompanies(Set<GrowerCompany> growerCompanies) {
+        this.growerCompanies = growerCompanies;
+    }
+
+    public void addGrowerCompany(GrowerCompany growerCompany) {
+        this.growerCompanies.add(growerCompany);
+    }
+
 }

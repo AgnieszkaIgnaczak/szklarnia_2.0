@@ -1,7 +1,9 @@
 package com.szklarnia.service;
 
 
+import com.szklarnia.model.GrowerCompany;
 import com.szklarnia.model.Product;
+import com.szklarnia.repository.GrowerCompanyRepository;
 import com.szklarnia.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,6 +16,9 @@ public class ProductService {
 
     @Autowired
     public ProductRepository productRepository;
+
+    @Autowired
+    public GrowerCompanyRepository growerCompanyRepository;
 
     public Iterable<Product> getAllProducts() {
         return productRepository.findAll();
@@ -47,5 +52,15 @@ public class ProductService {
         return Optional.empty(); //by nie zwracał nulla
     }
 
-    
+    //patch
+    public Optional<Product> setGrowerCompanyForProduct(Integer growerCompanyId, Integer productId) {
+        if(growerCompanyRepository.existsById(growerCompanyId) && productRepository.existsById(productId)) {
+            Product product = productRepository.findById(productId).get();
+            GrowerCompany growerCompany = growerCompanyRepository.findById(growerCompanyId).get();
+            product.addGrowerCompany(growerCompany);
+            return Optional.of(productRepository.save(product));
+        }
+        return Optional.empty();
+    }
+
 }

@@ -1,5 +1,6 @@
 package com.szklarnia.controller;
 
+import com.szklarnia.model.GrowerCompany;
 import com.szklarnia.model.Product;
 import com.szklarnia.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,4 +70,15 @@ public class ProductController {
             return ResponseEntity.notFound().build();
         }
     }
+
+    @PatchMapping("/{productId}/setGrowerCompany/{growerCompanyId}")
+    public ResponseEntity<String> setGrowerCompanyForProduct(@PathVariable Integer productId, @PathVariable Integer growerCompanyId) { //tu kolejność arg nie jest istotna
+        Optional<Product> growerCompanyForProduct = productService.setGrowerCompanyForProduct(growerCompanyId, productId); //ta linia vs. metoda w service
+        if(growerCompanyForProduct.isPresent()) {
+            return ResponseEntity.ok("Product set for Grower Company successfully");
+        }
+        return ResponseEntity.notFound().build();
+    }
+
+
 }

@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table
@@ -18,6 +19,11 @@ public class GrowerCompany {
     @OneToMany(mappedBy = "growerCompany") //pole w encji Greenhouse
     @JsonIgnore
     private List<Greenhouse> greenhouses;
+
+
+    @ManyToMany(cascade = CascadeType.MERGE)
+    @JoinTable(name = "grower_company_product", joinColumns = @JoinColumn(name = "company_id"), inverseJoinColumns = @JoinColumn(name = "product_id"))
+    public Set<Product> products;
 
     @NotNull(message = "name cannot be null")
     private String name;
@@ -77,4 +83,17 @@ public class GrowerCompany {
     public void setGreenhouses(List<Greenhouse> greenhouses) {
         this.greenhouses = greenhouses;
     }
+
+    public Set<Product> getProducts() {
+        return products;
+    }
+
+    public void setProducts(Set<Product> products) {
+        this.products = products;
+    }
+
+    public void addProduct(Product product) {
+        this.products.add(product);
+    }
+
 }

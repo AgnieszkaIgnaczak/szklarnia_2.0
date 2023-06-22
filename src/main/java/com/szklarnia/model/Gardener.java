@@ -4,7 +4,12 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 
 @Entity
-@Table
+@Table //(name = "NAZWA TABELI")
+//@Getter
+//@Setter
+//@NoArgsConstructor
+//@AllArgsConstructor
+//@Data (Gettery i Settery)
 public class Gardener {
 
     @Id

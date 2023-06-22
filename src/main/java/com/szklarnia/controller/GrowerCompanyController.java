@@ -67,6 +67,15 @@ public class GrowerCompanyController {
         }
     }
 
+    @PatchMapping("/{growerCompanyId}/setProduct/{productId}")
+    public ResponseEntity<String> setProductForGrowerCompany(@PathVariable Integer productId, @PathVariable Integer growerCompanyId) { //tu kolejność nie jest istotna
+        Optional<GrowerCompany> productForGrowerCompany = growerCompanyService.setProductForGrowerCompany(productId, growerCompanyId); //ta linia vs. metoda w service
+        if(productForGrowerCompany.isPresent()) {
+            return ResponseEntity.ok("Product set for Grower Company successfully");
+        }
+        return ResponseEntity.notFound().build();
+    }
+
 
 
 }
