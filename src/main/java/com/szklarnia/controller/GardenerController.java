@@ -1,5 +1,6 @@
 package com.szklarnia.controller;
 
+import com.szklarnia.exception_handler.ApiRequestException;
 import com.szklarnia.model.Gardener;
 import com.szklarnia.service.GardenerService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,11 +20,12 @@ public class GardenerController {
     @Autowired
     public GardenerController(GardenerService gardenerService) {
         this.gardenerService = gardenerService;
-    }
+    } //wstrzykiwanie zależności
 
     @GetMapping
     public Iterable<Gardener> getAllGardeners() {
-        return gardenerService.getAllGardeners();
+        throw new ApiRequestException("Reksio szuka ogrodnika, bo mu właściciel ciągle znika. A ogrodnik zginął w ogrodzie, bo ma błędy w kodzie. Reksiu! Reksiu! Szukaj dalej, tylko nie szalej.");
+        //return gardenerService.getAllGardeners();
     }
 
     @DeleteMapping("/{gardenerId}")

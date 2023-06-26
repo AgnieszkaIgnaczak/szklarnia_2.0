@@ -17,7 +17,8 @@ public class Product {
 
     @ManyToMany(cascade = CascadeType.MERGE)
     @JsonIgnore
-    @JoinTable(name = "grower_company_product", joinColumns = @JoinColumn(name = "product_id"), inverseJoinColumns = @JoinColumn(name = "company_id"))
+    //@ManyToMany(mappedBy = "products")
+    @JoinTable(name = "grower_company_product", joinColumns = @JoinColumn(name = "product_id"), inverseJoinColumns = @JoinColumn(name = "company_id")) //jeśli są 2 metody w obie strony
     private Set<GrowerCompany> growerCompanies;
 
     private String fruit;
