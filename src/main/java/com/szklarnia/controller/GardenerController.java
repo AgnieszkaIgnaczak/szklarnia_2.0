@@ -24,18 +24,13 @@ public class GardenerController {
 
     @GetMapping
     public Iterable<Gardener> getAllGardeners() {
-        throw new ApiRequestException("Reksio szuka ogrodnika, bo mu właściciel ciągle znika. A ogrodnik zginął w ogrodzie, bo ma błędy w kodzie. Reksiu! Reksiu! Szukaj dalej, tylko nie szalej.");
-        //return gardenerService.getAllGardeners();
+        return gardenerService.getAllGardeners();
     }
 
     @DeleteMapping("/{gardenerId}")
     public ResponseEntity<Void> deleteGardenerById(@PathVariable int gardenerId) {
-        if(gardenerService.getGardenerById(gardenerId).isEmpty()) {
-            return ResponseEntity.notFound().build();
-        } else {
-            gardenerService.deleteGardenerById(gardenerId);
-            return ResponseEntity.noContent().build();
-        }
+        gardenerService.deleteGardenerById(gardenerId);
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/{gardenerId}")
@@ -50,12 +45,8 @@ public class GardenerController {
 
     @PostMapping
     public ResponseEntity<Gardener> postNewGardener(@RequestBody Gardener newGardener) {
-        Optional<Gardener> savedGardener = gardenerService.postNewGardener(newGardener);
-        if(savedGardener.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        } else {
-            return ResponseEntity.status(HttpStatus.CREATED).body(savedGardener.get());
-        }
+        Gardener savedGardener = gardenerService.postNewGardener(newGardener);
+        return ResponseEntity.status(HttpStatus.CREATED).body(savedGardener);
     }
 
     @PutMapping("/completeUpdate/{gardenerId}")

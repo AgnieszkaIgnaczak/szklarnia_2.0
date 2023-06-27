@@ -22,7 +22,7 @@ public class ApiExceptionHandler {
         HttpStatus badRequest = HttpStatus.BAD_REQUEST; //replaces all occurrences
 
         //object which contains payload information
-        ApiException apiException = new ApiException(
+        ApiExceptionDetails apiException = new ApiExceptionDetails(
                 are.getMessage(),
                 //are, //Throwable
                 //HttpStatus.BAD_REQUEST, //ctl + shift + space

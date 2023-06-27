@@ -23,7 +23,7 @@ public class GrowerCompany {
 
     @ManyToMany(cascade = CascadeType.MERGE)
     @JoinTable(name = "grower_company_product", joinColumns = @JoinColumn(name = "company_id"), inverseJoinColumns = @JoinColumn(name = "product_id"))
-    public Set<Product> products;
+    private Set<Product> products;
 
     @NotNull(message = "name cannot be null")
     private String name;

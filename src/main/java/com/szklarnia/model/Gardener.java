@@ -26,7 +26,11 @@ public class Gardener {
 
     @NotNull(message = "name cannot be null")
     private String name;
-    private Float experience;
+
+
+    private Integer experience;
+
+
     private String address;
 
     @NotNull(message = "name cannot be null")
@@ -35,6 +39,21 @@ public class Gardener {
 
     public Gardener() {
 
+    }
+
+    public Gardener(String name, Integer experience, String address, Float salary) {
+        this.name = name;
+        this.experience = experience;
+        this.address = address;
+        this.salary = salary;
+    }
+
+    public Gardener(Integer gardenerId, String name, Integer experience, String address, Float salary) {
+        this.gardenerId = gardenerId;
+        this.name = name;
+        this.experience = experience;
+        this.address = address;
+        this.salary = salary;
     }
 
     public Integer getGardenerId() {
@@ -53,11 +72,11 @@ public class Gardener {
         this.name = name;
     }
 
-    public Float getExperience() {
+    public Integer getExperience() {
         return experience;
     }
 
-    public void setExperience(Float experience) {
+    public void setExperience(Integer experience) {
         this.experience = experience;
     }
 
