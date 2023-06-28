@@ -1,6 +1,5 @@
 package com.szklarnia.controller;
 
-import com.szklarnia.exception_handler.ApiRequestException;
 import com.szklarnia.model.Gardener;
 import com.szklarnia.service.GardenerService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,12 +34,8 @@ public class GardenerController {
 
     @GetMapping("/{gardenerId}")
     public ResponseEntity<Gardener> getGardenerById(@PathVariable int gardenerId) {
-        Optional<Gardener> responseFromGardener = gardenerService.getGardenerById(gardenerId);
-        if(responseFromGardener.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        } else {
-            return ResponseEntity.ok(responseFromGardener.get());
-        }
+        Gardener gardenerById = gardenerService.getGardenerById(gardenerId);
+        return ResponseEntity.ok(gardenerById);
     }
 
     @PostMapping

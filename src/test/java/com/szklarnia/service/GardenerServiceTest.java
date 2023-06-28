@@ -13,8 +13,10 @@ import org.mockito.MockitoAnnotations;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
-import static org.mockito.Mockito.when;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.*;
 
 //@Transactional - nad klasą testującą, niepotrzebne przy testach jednostkowych, na całej aplikacji, odwołanie do bazy, poleci na bazie jak wszystko się wykona (łączy wszystko w jedną transakcję)
 //@SpringBootTest - do testów na więcej niż jednej warstwie, łączy z bazą danych
@@ -50,7 +52,7 @@ class GardenerServiceTest {
         Gardener gardener1 = new Gardener(9, "Zbigniew Lewkonia", 25, "ul.Chwastowa 70", 5500.0F); //lub bez id
         when(gardenerRepository.save(gardener1)).thenReturn(gardener1); //mockowanie, udaje metody z repo
         Gardener savedGardener1 = this.gardenerService.postNewGardener(gardener1); //realna metoda z serwisu
-        Assertions.assertEquals(savedGardener1, gardener1); //porównuje to, co zapisane na repo z tym, co zwraca metoda z serwisu, expected vs. actual
+        assertEquals(savedGardener1, gardener1); //porównuje to, co zapisane na repo z tym, co zwraca metoda z serwisu, expected vs. actual
     }
 
     @Test
@@ -61,7 +63,7 @@ class GardenerServiceTest {
             when(gardenerRepository.existsById(gardener2.getGardenerId())).thenReturn(true); //druga część warunku z metody serwisowej zwraca ture, jeśli id istnieje
             this.gardenerService.postNewGardener(gardener2);
         });
-        Assertions.assertEquals("Cannot post gardener with existing ID.", thrown.getMessage()); //dodatkowe sprawdzenie, test wiadomości zwrotnej w przypadku wyrzucenia wyjątku, tu vs. tekst w metodzie serwisu
+        assertEquals("Cannot post gardener with existing ID.", thrown.getMessage()); //dodatkowe sprawdzenie, test wiadomości zwrotnej w przypadku wyrzucenia wyjątku, tu vs. tekst w metodzie serwisu
     }
 
     //GET ALL
@@ -75,26 +77,60 @@ class GardenerServiceTest {
 
         when(gardenerRepository.findAll()).thenReturn(listOfGardeners);
         Iterable<Gardener> result = gardenerService.getAllGardeners();
-        Assertions.assertEquals(listOfGardeners, result);
+        assertEquals(listOfGardeners, result);
     }
 
-    //DELETE
+    //DELETE BY ID
 
     @Test
     public void shouldDeleteGardenerByExistingId() {
 
+        int gardenerId = 10;
+
+        when(gardenerRepository.existsById(gardenerId)).thenReturn(true);
+        gardenerService.deleteGardenerById(gardenerId);
+        verify(gardenerRepository, times(1)).deleteById(gardenerId);
     }
 
     @Test
-    public void shouldNotDeleteGardenerByExistingId() {
+    public void shouldNotDeleteGardenerByNonExistingIdEmptyRepo() {
+        ApiRequestException thrown = Assertions.assertThrows(ApiRequestException.class, () -> {
+            int gardenerIdToDelete = 11;
+            when(gardenerRepository.existsById(gardenerIdToDelete)).thenReturn(false); //oczekuję, że nie znajduje ID
+            gardenerService.deleteGardenerById(gardenerIdToDelete); // oczekuję exception
+        });
+        assertEquals("Cannot delete gardener with non-existing ID.", thrown.getMessage());
+    }
 
+    //FIND BY ID
+
+    @Test
+    public void shouldFindGardenerByExistingId() {
+
+        int gardenerId = 1;
+        Gardener gardener = new Gardener(gardenerId, "Zbigniew Złotokap", 2, "ul.Zalesiona 71", 5600.0F);
+        Optional<Gardener> optionalGardener = Optional.of(gardener);
+        when(gardenerRepository.findById(gardenerId)).thenReturn(optionalGardener);
+
+        Optional<Gardener> result = Optional.of(gardenerService.getGardenerById(gardenerId));
+        assertEquals(optionalGardener, result);
+    }
+
+    @Test
+    public void shouldNotFindGardenerByNonExistingId() {
+        ApiRequestException thrown = Assertions.assertThrows(ApiRequestException.class, () -> {
+            int gardenerToFindById = 11;
+            when(gardenerRepository.findById(gardenerToFindById)).thenReturn(Optional.empty());
+            gardenerService.getGardenerById(gardenerToFindById);
+        });
+        assertEquals("Cannot get gardener with non-existing ID.", thrown.getMessage());
     }
 
 
 //        @Test
-//        public void shouldFindCorrectlyGardenerById() {}
+//        public void shouldFindGardenerByExistingName() {}
 //        @Test
-//        public void shouldFindCorrectlyExistingGardenerByName() {}
+//        public void shouldNotFindGardenerByNonExistingName() {}
 //
 //        @Test
 //        public void shouldUpdateCorrectlyExistingGardener() {}

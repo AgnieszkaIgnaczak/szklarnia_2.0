@@ -21,6 +21,7 @@ public class GardenerService {
     private GreenhouseRepository greenhouseRepository;
 
     //get all gardeners
+    //bez wyjątku!!!
     public Iterable<Gardener> getAllGardeners() {
         return gardenerRepository.findAll();
     }
@@ -31,16 +32,26 @@ public class GardenerService {
        if(gardenerRepository.existsById(gardenerId)) {
            gardenerRepository.deleteById(gardenerId);
        } else {
-           throw new ApiRequestException("Cannot delete non-existing gardener.");
+           throw new ApiRequestException("Cannot delete gardener with non-existing ID.");
        }
     }
 
     //get gardener by ID
-    public Optional<Gardener> getGardenerById(int gardenerId) {
-        return gardenerRepository.findById(gardenerId);
+    public Gardener getGardenerById(int gardenerId) {
+        Optional<Gardener> optionalGardener = gardenerRepository.findById(gardenerId);
+        if(optionalGardener.isPresent()) {
+            return optionalGardener.get();
+        } else {
+            throw new ApiRequestException("Cannot get gardener with non-existing ID.");
+        }
     }
 
+//    public Optional<Gardener> getGardenerById(int gardenerId) {
+//        return gardenerRepository.findById(gardenerId);
+//    }
+
     //save an entity/post new entity to DB
+    //wyjątek!!!
     public Gardener postNewGardener(Gardener newGardener) {
         //jeśli id nie jest null'em, bo ktoś podał id w Postmanie && jeśli istnieje już na bazie, to zwróć błąd, jeśli istnieje to true, jeśli nie false
         if(newGardener.getGardenerId() != null && gardenerRepository.existsById(newGardener.getGardenerId())) {
@@ -63,6 +74,7 @@ public class GardenerService {
     }
 
     //znajdź ogrodników po imieniu
+    //customowa metoda z repo
     public List<Gardener> findAllGardenersByName(String name) {
         return gardenerRepository.findAllByNameContaining(name);
     }
