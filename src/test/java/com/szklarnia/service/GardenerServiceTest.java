@@ -2,7 +2,9 @@ package com.szklarnia.service;
 
 import com.szklarnia.exception_handler.ApiRequestException;
 import com.szklarnia.model.Gardener;
+import com.szklarnia.model.Greenhouse;
 import com.szklarnia.repository.GardenerRepository;
+import com.szklarnia.repository.GreenhouseRepository;
 import jakarta.annotation.Resource;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -32,6 +34,9 @@ class GardenerServiceTest {
     //mock - udaje inne komponenty w kodzie, symuluje odpowiedź jakiegoś komponentu, tworzy mock'a
     @Mock
     private GardenerRepository gardenerRepository;
+
+    @Mock
+    private GreenhouseRepository greenhouseRepository;
 
     //adnotacja umożliwia odpalenie danej metody przed każdym testem
     //metoda ta musi być void, musi być public, nie może być static
@@ -75,7 +80,7 @@ class GardenerServiceTest {
         listOfGardeners.add(new Gardener("Zbigniew Lewkonia", 25, "ul.Chwastowa 70", 5500F));
         listOfGardeners.add(new Gardener("Arkadiusz Szypułka", 15, "ul.Kwiecista 11", 7700F));
 
-        when(gardenerRepository.findAll()).thenReturn(listOfGardeners);
+        when(gardenerRepository.findAll()).thenReturn(listOfGardeners); //mock
         Iterable<Gardener> result = gardenerService.getAllGardeners();
         assertEquals(listOfGardeners, result);
     }
@@ -126,16 +131,100 @@ class GardenerServiceTest {
         assertEquals("Cannot get gardener with non-existing ID.", thrown.getMessage());
     }
 
+    @Test
+    public void shouldFindGardenerByExistingName() {
 
-//        @Test
-//        public void shouldFindGardenerByExistingName() {}
-//        @Test
-//        public void shouldNotFindGardenerByNonExistingName() {}
-//
-//        @Test
-//        public void shouldUpdateCorrectlyExistingGardener() {}
-//
-//        @Test
-//        public void shouldSetCorrectlyGreenhouseForGardener() {}
+        List<Gardener> listOfGardeners = new ArrayList<>();
+        listOfGardeners.add(new Gardener("Grzegorz Fiołek", 15, "ul.Działkowa 34", 4500F));
+        listOfGardeners.add(new Gardener("Grzegorz Lewkonia", 25, "ul.Chwastowa 70", 5500F));
+        listOfGardeners.add(new Gardener("Grzegorz Szypułka", 15, "ul.Kwiecista 11", 7700F));
 
+        when(gardenerRepository.findAllByNameContaining("Grzegorz")).thenReturn(listOfGardeners); //mock
+        Iterable<Gardener> result = gardenerService.findAllGardenersByName("Grzegorz"); //test
+        assertEquals(listOfGardeners, result); //porównanie wyników
+    }
+
+    @Test
+    public void shouldUpdateGardenerByExistingId() {
+
+        int gardenerId = 1;
+
+        Gardener updatedGardener = new Gardener();
+        updatedGardener.setGardenerId(gardenerId);
+        updatedGardener.setExperience(30);
+
+        //mock
+        when(gardenerRepository.existsById(gardenerId)).thenReturn(true);
+        when(gardenerRepository.save(updatedGardener)).thenReturn(updatedGardener);
+
+        gardenerService.completeGardenerEntityUpdated(gardenerId, updatedGardener);
+        verify(gardenerRepository, times(1)).save(updatedGardener);
+    }
+
+    @Test
+    public void shouldNotUpdateGardenerByNonExistingId() {
+        ApiRequestException thrown = Assertions.assertThrows(ApiRequestException.class, () -> {
+            int gardenerId = 11;
+            Gardener gardenerToBeUpdated = new Gardener();
+            when(gardenerRepository.existsById(gardenerId)).thenReturn(false);
+            gardenerService.completeGardenerEntityUpdated(gardenerId, gardenerToBeUpdated);
+        });
+        assertEquals("Cannot update gardener with provided ID.", thrown.getMessage());
+    }
+
+    @Test
+    public void shouldSetGreenhouseForGardenerWhenBothExist() {
+        int gardenerId = 1;
+        int greenhouseId = 1;
+
+        Gardener gardener = new Gardener(gardenerId, "Grzegorz Fiołek", 15, "ul.Działkowa 34", 4500F);
+        Greenhouse greenhouse = new Greenhouse(greenhouseId, 60F, "glass", 200F, "robots", "hydroponic");
+
+        Optional<Gardener> optionalGardener = Optional.of(gardener);
+        Optional<Greenhouse> optionalGreenhouse = Optional.of(greenhouse);
+
+        when(gardenerRepository.existsById(gardenerId)).thenReturn(true);
+        when(greenhouseRepository.existsById(greenhouseId)).thenReturn(true);
+
+        when(gardenerRepository.findById(gardenerId)).thenReturn(optionalGardener);
+        when(greenhouseRepository.findById(greenhouseId)).thenReturn(optionalGreenhouse);
+
+        gardener.setGreenhouse(greenhouse);
+
+        when(gardenerRepository.save(gardener)).thenReturn(gardener);
+
+        this.gardenerService.setGreenhouseForGardener(greenhouseId, gardenerId);
+
+        verify(gardenerRepository, times(1)).save(gardener);
+
+    }
+
+    @Test
+    public void shouldNotSetGreenhouseForGardenerWhenBothDoNotExist() {
+        ApiRequestException thrown = Assertions.assertThrows(ApiRequestException.class, () -> {
+            int gardenerId = 11;
+            int greenhouseId = 11;
+            when(gardenerRepository.existsById(gardenerId)).thenReturn(false);
+            gardenerService.setGreenhouseForGardener(greenhouseId, gardenerId);
+        });
+        assertEquals("Cannot set greenhouse for gardener because gardener ID does not exist.", thrown.getMessage());
+    }
+
+    @Test
+    public void shouldNotSetGreenhouseForGardenerWhenGreenhouseDoesNotExist() {
+        ApiRequestException thrown = Assertions.assertThrows(ApiRequestException.class, () -> {
+            int greenhouseId = 1;
+            int gardenerId = 1;
+
+            Gardener gardener = new Gardener();
+
+            //mock, metoda po metodzie z metody service
+            when(gardenerRepository.existsById(gardenerId)).thenReturn(true);
+            when(gardenerRepository.findById(gardenerId)).thenReturn(Optional.of(gardener));
+            when(greenhouseRepository.existsById(greenhouseId)).thenReturn(false);
+
+            gardenerService.setGreenhouseForGardener(greenhouseId, gardenerId);
+        });
+        assertEquals("Cannot set greenhouse for gardener because greenhouse ID does not exist.", thrown.getMessage());
+    }
 }

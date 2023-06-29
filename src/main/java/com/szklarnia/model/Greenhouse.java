@@ -47,6 +47,15 @@ public class Greenhouse {
 
     }
 
+    public Greenhouse(Integer greenhouseId, Float area, String buildingMaterial, Float rentPrice, String harvestType, String farmingTechnique) {
+        this.greenhouseId = greenhouseId;
+        this.area = area;
+        this.buildingMaterial = buildingMaterial;
+        this.rentPrice = rentPrice;
+        this.harvestType = harvestType;
+        this.farmingTechnique = farmingTechnique;
+    }
+
     public Integer getGreenhouseId() {
         return greenhouseId;
     }

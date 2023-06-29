@@ -46,16 +46,12 @@ public class GardenerController {
 
     @PutMapping("/completeUpdate/{gardenerId}")
     public ResponseEntity<String> completeGardenerEntityUpdate(@PathVariable Integer gardenerId, @RequestBody Gardener updatedGardener) {
-        Optional<Gardener> gardenerToBeUpdated = gardenerService.completeGardenerEntityUpdated(gardenerId, updatedGardener);
-        if(gardenerToBeUpdated.isPresent()) {
-            return ResponseEntity.ok("Gardener updated successfully!");
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        gardenerService.completeGardenerEntityUpdated(gardenerId, updatedGardener);
+        return ResponseEntity.ok("Gardener updated successfully!");
     }
 
     @GetMapping("/getGardenersByName/{name}")
-    public List<Gardener> FindAllGardenersByName(@PathVariable String name) {
+    public List<Gardener> findAllGardenersByName(@PathVariable String name) {
         return gardenerService.findAllGardenersByName(name);
     }
 
@@ -64,12 +60,8 @@ public class GardenerController {
     //OneToOne
     @PatchMapping("/{gardenerId}/setGreenhouse/{greenhouseId}")
     public ResponseEntity<String> setGreenhouseForGardener(@PathVariable Integer gardenerId, @PathVariable Integer greenhouseId) { //zmienna ze ścieżki, linijka 70
-        Optional<Gardener> gardenerInGreenhouse = gardenerService.setGreenhouseForGardener(greenhouseId, gardenerId);
-        if(gardenerInGreenhouse.isPresent()) {
-            return ResponseEntity.ok("Greenhouse set for Gardener successfully");
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        gardenerService.setGreenhouseForGardener(greenhouseId, gardenerId);
+        return ResponseEntity.ok("Greenhouse set for Gardener successfully!");
     }
 
 

@@ -20,14 +20,13 @@ public class GardenerService {
     @Autowired
     private GreenhouseRepository greenhouseRepository;
 
-    //get all gardeners
+    //GET ALL
     //bez wyjątku!!!
     public Iterable<Gardener> getAllGardeners() {
         return gardenerRepository.findAll();
     }
 
-    //delete gardener by ID
-    //wyjątek!!!!
+    //DELETE BY ID
     public void deleteGardenerById(int gardenerId) {
        if(gardenerRepository.existsById(gardenerId)) {
            gardenerRepository.deleteById(gardenerId);
@@ -36,7 +35,7 @@ public class GardenerService {
        }
     }
 
-    //get gardener by ID
+    //GET BY ID
     public Gardener getGardenerById(int gardenerId) {
         Optional<Gardener> optionalGardener = gardenerRepository.findById(gardenerId);
         if(optionalGardener.isPresent()) {
@@ -50,8 +49,7 @@ public class GardenerService {
 //        return gardenerRepository.findById(gardenerId);
 //    }
 
-    //save an entity/post new entity to DB
-    //wyjątek!!!
+    //POST
     public Gardener postNewGardener(Gardener newGardener) {
         //jeśli id nie jest null'em, bo ktoś podał id w Postmanie && jeśli istnieje już na bazie, to zwróć błąd, jeśli istnieje to true, jeśli nie false
         if(newGardener.getGardenerId() != null && gardenerRepository.existsById(newGardener.getGardenerId())) {
@@ -64,32 +62,42 @@ public class GardenerService {
 //        return gardenerRepository.save(gardener);
 //    }
 
-    //put, entire entity overwritten, wszystkie pola nadpisane w Postmannie, bo będą nulle
-    public Optional<Gardener> completeGardenerEntityUpdated(Integer gardenerId, Gardener updateGardener) {
+    //PUT/UPDATE
+    //(entire entity overwritten, wszystkie pola nadpisane w Postmannie, bo będą null'em)
+    public Gardener completeGardenerEntityUpdated(Integer gardenerId, Gardener updateGardener) {
         if(gardenerRepository.existsById(gardenerId)) {
             updateGardener.setGardenerId(gardenerId);
-            return Optional.of(gardenerRepository.save(updateGardener));
+            return gardenerRepository.save(updateGardener);
         }
-        return Optional.empty();
+        throw new ApiRequestException("Cannot update gardener with provided ID.");
     }
 
-    //znajdź ogrodników po imieniu
-    //customowa metoda z repo
+    //FIND BY NAME
+    //custom method from repo
+    //bez wyjątku, bo w przypadku braku imienia zwróci pustą listę
     public List<Gardener> findAllGardenersByName(String name) {
         return gardenerRepository.findAllByNameContaining(name);
     }
 
 
-    //w serwisie sprawdzam, czy istnieje taki ogrodnik i szklarnia po ich ID
-    //jeśli tak, to dla obiektu ogrodnika gardener ustawić szklarnię setSzklarnia, który przyjmuje szklarnię greenhouse, i zapisać ogrodnika, żeby je złączyć
+    //sprawdzam, czy istnieje taki ogrodnik i szklarnia po ich ID
+    //jeśli tak, to dla obiektu gardener ustawić (set) szklarnię greenhouse
+    //zapisać ogrodnika, żeby je złączyć
     //OneToOne
-    public Optional<Gardener> setGreenhouseForGardener(Integer greenhouseId, Integer gardenerId) {
-        if(gardenerRepository.existsById(gardenerId) && greenhouseRepository.existsById(greenhouseId)) {
+    //2 wyjątki
+    public Gardener setGreenhouseForGardener(Integer greenhouseId, Integer gardenerId) {
+        if(gardenerRepository.existsById(gardenerId)) {
             Gardener gardener = gardenerRepository.findById(gardenerId).get();
-            Greenhouse greenhouse = greenhouseRepository.findById(greenhouseId).get();
-            gardener.setGreenhouse(greenhouse);
-            return Optional.of(gardenerRepository.save(gardener));
+            if(greenhouseRepository.existsById(greenhouseId)) {
+                Greenhouse greenhouse = greenhouseRepository.findById(greenhouseId).get();
+                gardener.setGreenhouse(greenhouse);
+                return gardenerRepository.save(gardener);
+            } else {
+                throw new ApiRequestException("Cannot set greenhouse for gardener because greenhouse ID does not exist.");
+            }
+        } else {
+            throw new ApiRequestException("Cannot set greenhouse for gardener because gardener ID does not exist.");
         }
-        return Optional.empty();
     }
+
 }
