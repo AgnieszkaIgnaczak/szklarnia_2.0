@@ -217,10 +217,11 @@ class GardenerServiceTest {
             int gardenerId = 1;
 
             Gardener gardener = new Gardener();
+            Optional<Gardener> optionalGardener = Optional.of(gardener);
 
             //mock, metoda po metodzie z metody service
             when(gardenerRepository.existsById(gardenerId)).thenReturn(true);
-            when(gardenerRepository.findById(gardenerId)).thenReturn(Optional.of(gardener));
+            when(gardenerRepository.findById(gardenerId)).thenReturn(optionalGardener); //Optional.of(gardener)
             when(greenhouseRepository.existsById(greenhouseId)).thenReturn(false);
 
             gardenerService.setGreenhouseForGardener(greenhouseId, gardenerId);
